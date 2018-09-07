@@ -2,7 +2,6 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 
-const request = require('./lib/request');
 const services = require('./lib/services');
 
 const app = new Koa();
@@ -20,23 +19,25 @@ router.post('/session/collect/', (ctx, next) => {
     next();
 });
 
-router.all('/proxy/:proto/:host/:url*', (ctx, next) => request(ctx.method, ctx.params, ctx.query, ctx.headers).then((req) => {
-    console.log('========', req.text);
-    ctx.body = req.text;
-    const h = req.headers;
-    delete h['content-encoding'];
-    h['content-length'] = Buffer.byteLength(req.text);
-    Object.keys(h).forEach((name) => {
-        ctx.set(name, h[name]);
-    });
-}, (e) => {
-    const h = e.response.headers;
-    console.error('-------', e.toString(), e.response.req);
-    Object.keys(h).forEach((name) => {
-        ctx.set(name, h[name]);
-    });
-    ctx.body = e.response.text;
-}).then(next));
+router.all(/^\/proxy\/(http|https)\/([\w.]+)(\/?.*)$/, (ctx, next) => {
+    const params = {
+        proto: ctx.params[0],
+        host: ctx.params[1],
+        url: ctx.params[2],
+    };
+
+    return services.getResponse(ctx.method, params, ctx.query, ctx.headers)
+        .then((req) => {
+            const h = req.headers;
+            delete h['content-encoding']; // data already decoded
+            h['content-length'] = Buffer.byteLength(req.body);
+            Object.keys(h).forEach((name) => {
+                ctx.set(name, h[name]);
+            });
+            ctx.body = req.body;
+            next();
+        });
+});
 
 app
     .use(bodyParser())
