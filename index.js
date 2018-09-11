@@ -25,7 +25,7 @@ router.all(/^\/proxy\/(http|https)\/([\w.]+)(\/?.*)$/, (ctx, next) => {
         url: ctx.params[2],
     };
 
-    return services.getResponse(ctx.method, params, ctx.query, ctx.headers)
+    return services.getResponse(ctx.method, params, ctx.query, ctx.headers, ctx.request.rawBody)
         .then((req) => {
             const h = req.headers;
             delete h['content-encoding']; // data already decoded
