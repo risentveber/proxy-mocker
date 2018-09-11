@@ -3,19 +3,18 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 
 const services = require('./lib/services');
+const config = require('./lib/config');
 
 const app = new Koa();
 const router = new Router();
 
 router.post('/session/use/', (ctx, next) => {
-    const id = services.createSession(ctx.request.body, true);
-    ctx.body = { id };
+    ctx.body = services.createSession(ctx.request.body, true);
     next();
 });
 
 router.post('/session/collect/', (ctx, next) => {
-    const id = services.createSession(ctx.request.body, false);
-    ctx.body = { id };
+    ctx.body = services.createSession(ctx.request.body, false);
     next();
 });
 
@@ -44,4 +43,4 @@ app
     .use(router.routes())
     .use(router.allowedMethods());
 
-app.listen(3000);
+app.listen(config.getPort());
