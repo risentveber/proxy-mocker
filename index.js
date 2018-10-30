@@ -25,7 +25,7 @@ function setAllow(ctx) {
     ctx.set('Access-Control-Allow-Credentials', 'true');
 }
 
-router.all(/^\/proxy\/(http|https)\/([\w.]+)(\/?.*)$/, (ctx, next) => {
+router.all(/^\/proxy\/(http|https)\/([\w.-]+)(\/?.*)$/, (ctx, next) => {
     const params = {
         proto: ctx.params[0],
         host: ctx.params[1],
