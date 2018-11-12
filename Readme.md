@@ -110,3 +110,7 @@ cache-control: no-cache,no-store,max-age=0,must-revalidate
 |---------------------------------------|:----------------------------------------------:|----------------------------------------------|:--------:|
 |DB\_JSONFILE                           | Json-file static mocks storage path            |                                              |          |
 |PORT                                   | Port(inside container)                         | 8080                                         |          |
+|POSTGRES\_HOST                         | Postgers host                                  |                                              |          |
+|POSTGRES\_USER                         | Postgers user                                  |                                              |          |
+|POSTGRES\_PASSWORD                     | Postgers password                              |                                              |          |
+|POSTGRES\_DATABASE                     | Postgers database name                         |                                              |          |

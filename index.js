@@ -9,15 +9,17 @@ const config = require('./lib/config');
 const app = new Koa();
 const router = new Router();
 
-router.post('/session/use/', (ctx, next) => {
-    ctx.body = services.createSession(ctx.request.body, true);
-    next();
-});
+router.post('/session/use/', (ctx, next) => services.createSession(ctx.request.body, true).then((body) => {
+    ctx.body = body;
+}).catch((err) => {
+    ctx.body = err;
+}).then(next));
 
-router.post('/session/collect/', (ctx, next) => {
-    ctx.body = services.createSession(ctx.request.body, false);
-    next();
-});
+router.post('/session/collect/', (ctx, next) => services.createSession(ctx.request.body, false).then((body) => {
+    ctx.body = body;
+}).catch((err) => {
+    ctx.body = err;
+}).then(next));
 
 function setAllow(ctx) {
     ctx.set('Access-Control-Allow-Origin', '*');
@@ -52,7 +54,6 @@ router.all(/^\/proxy\/(http|https)\/([\w.-]+)(\/?.*)$/, (ctx, next) => {
 });
 
 app
-    // .use(cors())
     .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods());
