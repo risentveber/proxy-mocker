@@ -1,0 +1,117 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Mocker-server short docs",
+    "title": "Mocker-server",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/session/use/": {
+      "post": {
+        "summary": "create use session",
+        "requestBody": {
+          "description": "mockId to collect for",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionForm"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session/collect/": {
+      "post": {
+        "summary": "create collect session",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proxy/{protocol}/{url}": {
+      "post": {
+        "summary": "proxy for particular method",
+        "description": "With **any** http method\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "protocol",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "http",
+                "https"
+              ]
+            },
+            "required": true,
+            "description": "protocol used for host"
+          },
+          {
+            "in": "path",
+            "name": "url",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "www.google.com/some_api/get_data/",
+            "description": "method with hostname"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "As returned by initial service with approritate http code"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SessionForm": {
+        "type": "object",
+        "properties": {
+          "mockId": {
+            "type": "string"
+          }
+        }
+      },
+      "SessionData": {
+        "type": "object",
+        "properties": {
+          "mockId": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": "string"
+          },
+          "use": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

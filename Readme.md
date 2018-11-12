@@ -15,6 +15,13 @@ Stop mocker:
 docker kill mocker && docker rm mocker
 ```
 
+### Swagger docs
+
+If you need some docs:
+```
+docker run -p 80:8080 -e "SWAGGER_JSON=/openapi.json" -v "$(pwd)/openapi.json:/openapi.json" --name swag_ui swaggerapi/swagger-ui
+```
+
 ### Workflow
 
 Create collect session (return new mockId in payload):
